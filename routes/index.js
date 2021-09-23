@@ -15,10 +15,12 @@ var expDataSchema = new Schema({
 
 var expData = mongoose.model('ExpData', expDataSchema);
 
-/* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index');
 });
+router.get('/home', function (req, res, next) {
+  res.redirect('/');
+} )
 router.get('/expenses', function (req, res, next) {
   expData.find()
     .then((exp) => {
@@ -26,6 +28,7 @@ router.get('/expenses', function (req, res, next) {
     })
   res.send('Total expense = 0');
 });
+
 router.post('/insert', function (req, res, next) {
   var ins = {
     item: req.body.item,
