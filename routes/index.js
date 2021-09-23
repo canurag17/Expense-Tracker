@@ -29,6 +29,10 @@ router.get('/expenses', function (req, res, next) {
   res.send('Total expense = 0');
 });
 
+router.get('/login', function (req, res, next) {
+  res.render('login');
+});
+
 router.post('/insert', function (req, res, next) {
   var ins = {
     item: req.body.item,
