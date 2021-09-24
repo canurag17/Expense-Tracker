@@ -10,22 +10,20 @@ var Schema = mongoose.Schema;
 var expDataSchema = new Schema({
   item: { type: String, required: true },
   expense: { type: Number, required: true },
-  category: String
-}, { collection: 'exp-data' });
+  category: { type: String, required: true }
+}, { collection: 'exp-data', timestamps: true });
 
 var expData = mongoose.model('ExpData', expDataSchema);
 
 router.get('/', function (req, res, next) {
   res.render('index');
 });
+
 router.get('/home', function (req, res, next) {
   res.redirect('/');
-} )
+})
+
 router.get('/expenses', function (req, res, next) {
-  expData.find()
-    .then((exp) => {
-      res.send('Data')
-    })
   res.send('Total expense = 0');
 });
 
