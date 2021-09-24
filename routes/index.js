@@ -6,7 +6,23 @@ var assert = require('assert');
 var url = 'mongodb+srv://admin:admin123@cluster0.fayua.mongodb.net/expense-tracker?retryWrites=true&w=majority';
 mongoose.connect(url);
 
+
+app.use(require("express-session")({
+  secret:"Any normal Word",//decode or encode session
+      resave: false,          
+      saveUninitialized:false    
+  }));
+
+  
 var Schema = mongoose.Schema;
+const UserSchema = new mongoose.Schema({
+    fullname:String,
+    username:String,
+    password:String,
+}) ;
+
+UserSchema.plugin(passportLocalMongoose);
+module.exports = mongoose.model("User",UserSchema);
 var expDataSchema = new Schema({
   item: { type: String, required: true },
   expense: { type: Number, required: true },
