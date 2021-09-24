@@ -24,7 +24,7 @@ router.get('/home', function (req, res, next) {
 })
 
 router.get('/expenses', function (req, res, next) {
-  res.send('Total expense = 0');
+  res.render('expense');
 });
 
 router.get('/login', function (req, res, next) {
