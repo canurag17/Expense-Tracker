@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var assert = require('assert');
+const passport=require("passport");
+const LocalStrategy=require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
 var app=express();
+
 var url = 'mongodb+srv://admin:admin123@cluster0.fayua.mongodb.net/expense-tracker?retryWrites=true&w=majority';
 mongoose.connect(url);
 
@@ -23,12 +26,14 @@ const UserSchema = new mongoose.Schema({
 }) ;
 
 UserSchema.plugin(passportLocalMongoose);
-module.exports = mongoose.model("User",UserSchema);
 var expDataSchema = new Schema({
   item: { type: String, required: true },
   expense: { type: Number, required: true },
   category: String
 }, { collection: 'exp-data' });
+
+module.exports = mongoose.model("User",UserSchema);
+User=require("../routes/index.js");
 
 var expData = mongoose.model('ExpData', expDataSchema);
 
@@ -85,5 +90,78 @@ router.post('/delete', function (req, res, next) {
   expData.findByIdAndRemove(id).exec();
   res.redirect('/');
 });
+
+
+
+passport.serializeUser(User.serializeUser());       
+passport.deserializeUser(User.deserializeUser());   
+passport.use(new LocalStrategy(User.authenticate()));
+
+app.set("view engine","ejs");
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(require("express-session")({
+    secret:"Any normal Word",       //decode or encode session
+    resave: false,          
+    saveUninitialized:false    
+}));
+
+app.set("view engine","ejs");
+
+//routes
+app.get("/", (req,res) =>{
+    res.render("index");
+})
+app.get("../views/index" ,(req,res) =>{
+    res.render("index");
+})
+//Auth Routes
+app.get("../views/login",(req,res)=>{
+    res.render("login");
+});
+
+app.post("../views/login",passport.authenticate("local",{
+    successRedirect:"../views/index.ejs",
+    failureRedirect:"../views/login.ejs"
+
+}),(req,res)=>{
+    
+});
+
+
+app.get("../views/signup",(req,res)=>{
+    res.render("signup");
+});
+
+app.post("../views/signup",(req,res)=>{
+    
+User.register(new User({fullname: req.body.fullname,username: req.body.username,password:req.body.password}),req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            res.render("signup");
+        }
+    passport.authenticate("local")(req,res,function(){
+        res.redirect("./views/login");
+    })    
+    })
+})
+
+app.get("../views/logout",(req,res)=>{
+    req.logout();
+    res.redirect("/");
+});
+
+function isLoggedIn(req,res,next) {
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("./views/login");
+}
+
 
 module.exports = router;
