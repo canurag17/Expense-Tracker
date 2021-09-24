@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@mongodb-js/charts-embed-dom": "^2.1.0",
     "assert": "^2.0.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
