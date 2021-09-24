@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var assert = require('assert');
-
+var app=express();
 var url = 'mongodb+srv://admin:admin123@cluster0.fayua.mongodb.net/expense-tracker?retryWrites=true&w=majority';
 mongoose.connect(url);
 
@@ -13,7 +13,7 @@ app.use(require("express-session")({
       saveUninitialized:false    
   }));
 
-  
+
 var Schema = mongoose.Schema;
 const UserSchema = new mongoose.Schema({
     fullname:String,
