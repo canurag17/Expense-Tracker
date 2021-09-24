@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var assert = require('assert');
+const passportLocalMongoose = require("passport-local-mongoose");
 var app=express();
 var url = 'mongodb+srv://admin:admin123@cluster0.fayua.mongodb.net/expense-tracker?retryWrites=true&w=majority';
 mongoose.connect(url);
